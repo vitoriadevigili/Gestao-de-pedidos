@@ -1,0 +1,30 @@
+<div class="page-header">
+  <div class="page-header__titulo">
+    <button
+      type="button"
+      pButton
+      iconOnly
+      [text]="true"
+      severity="secondary"
+      aria-label="Voltar"
+      (click)="voltar()"
+    >
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h1>Detalhes do Pedido</h1>
+  </div>
+  @if (pedido()) {
+    <div class="page-header__acoes">
+      <button pButton type="button" severity="danger" (click)="excluir()">Excluir</button>
+      <button pButton type="button" (click)="editar()">Editar</button>
+    </div>
+  }
+</div>
+
+@if (carregando()) {
+  <p>Carregando...</p>
+} @else if (!pedido()) {
+  <p-message severity="error">Pedido não encontrado.</p-message>
+} @else {
+  <app-pedido-form [pedido]="pedido()" [somenteLeitura]="true" />
+}

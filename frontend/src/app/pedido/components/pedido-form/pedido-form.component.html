@@ -1,0 +1,155 @@
+<form [formRoot]="pedidoForm" class="pedido-form">
+  <p-card
+    class="pedido-form__secao"
+    [header]="pedido() ? 'Dados do Pedido #' + pedido()!.id : 'Dados do Pedido'"
+  >
+    <div class="pedido-form__campos">
+      <div
+        class="pedido-form__campo"
+        [class.pedido-form__campo--invalido]="
+          pedidoForm.clienteId().invalid() && pedidoForm.clienteId().touched()
+        "
+      >
+        <label for="clienteId">Cliente</label>
+        <p-select
+          inputId="clienteId"
+          [formField]="$any(pedidoForm.clienteId)"
+          [options]="clientes()"
+          optionLabel="nome"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nome"
+          placeholder="Selecione um cliente"
+          fluid
+        />
+        @if (pedidoForm.clienteId().invalid() && pedidoForm.clienteId().touched()) {
+          <p-message severity="error" size="small" variant="simple">Cliente é obrigatório</p-message>
+        }
+      </div>
+
+      <div
+        class="pedido-form__campo"
+        [class.pedido-form__campo--invalido]="
+          pedidoForm.data().invalid() && pedidoForm.data().touched()
+        "
+      >
+        <label for="data">Data</label>
+        <p-datepicker
+          inputId="data"
+          [formField]="$any(pedidoForm.data)"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          iconDisplay="input"
+          fluid
+        />
+        @if (pedidoForm.data().invalid() && pedidoForm.data().touched()) {
+          <p-message severity="error" size="small" variant="simple">Data é obrigatória</p-message>
+        }
+      </div>
+    </div>
+  </p-card>
+
+  <p-card class="pedido-form__secao" header="Itens do Pedido">
+    @if (!somenteLeitura()) {
+      <div class="pedido-form__itens-topo">
+        <button pButton type="button" severity="secondary" (click)="abrirNovoItem()">
+          <span class="material-symbols-outlined">add</span>
+          Novo Item
+        </button>
+      </div>
+    }
+
+    <p-table [value]="pedidoModel().itens" [scrollable]="true">
+      <ng-template #header>
+        <tr>
+          <th>Produto</th>
+          <th>Quantidade</th>
+          <th>Valor Unitário</th>
+          <th>Subtotal</th>
+          @if (!somenteLeitura()) {
+            <th>Ações</th>
+          }
+        </tr>
+      </ng-template>
+      <ng-template #body let-item let-i="rowIndex">
+        <tr>
+          <td>{{ produtoNome(item.produtoId) }}</td>
+          <td>{{ item.quantidade }}</td>
+          <td>{{ item.valorUnitario | moeda }}</td>
+          <td>{{ subtotalItem(i) | moeda }}</td>
+          @if (!somenteLeitura()) {
+            <td>
+              <div class="actions">
+                <button
+                  type="button"
+                  pButton
+                  iconOnly
+                  [text]="true"
+                  size="small"
+                  severity="secondary"
+                  (click)="abrirEdicaoItem(i)"
+                >
+                  <span class="material-symbols-outlined">edit</span>
+                </button>
+                <button
+                  type="button"
+                  pButton
+                  iconOnly
+                  [text]="true"
+                  size="small"
+                  severity="secondary"
+                  (click)="removerItem(i)"
+                >
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </td>
+          }
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td [attr.colspan]="somenteLeitura() ? 4 : 5">
+            <div class="empty-message">
+              <span class="material-symbols-outlined">inventory_2</span>
+              <span>Nenhum item adicionado</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    @if (pedidoForm.itens().invalid() && pedidoForm.itens().touched()) {
+      <p-message severity="error" size="small" variant="simple">
+        O pedido deve conter ao menos um item
+      </p-message>
+    }
+
+    <div class="pedido-form__total">
+      <span>Total</span>
+      <strong>{{ valorTotal() | moeda }}</strong>
+    </div>
+  </p-card>
+
+  <div class="pedido-form__acoes">
+    <ng-content select="[pedidoFormAcoes]" />
+  </div>
+</form>
+
+<p-dialog
+  [(visible)]="itemModalAberto"
+  [modal]="true"
+  draggable="false"
+  [style]="{ width: '500px' }"
+  [header]="itemSelecionadoIndice() !== null ? 'Editar Item' : 'Novo Item'"
+  (onHide)="fecharModalItem()"
+>
+  @if (itemModalAberto()) {
+    <app-item-pedido-form [item]="itemSelecionado()" [produtos]="produtos()" (salvar)="salvarItem($event)" />
+  }
+
+  <ng-template #footer>
+    <button pButton type="button" severity="secondary" (click)="fecharModalItem()">Cancelar</button>
+    <button pButton type="button" (click)="itemForm()?.submit()">Salvar</button>
+  </ng-template>
+</p-dialog>

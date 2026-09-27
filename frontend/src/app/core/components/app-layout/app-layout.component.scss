@@ -1,0 +1,10 @@
+p-sidebar-layout {
+  height: 100vh;
+  overflow: hidden;
+}
+
+p-sidebar-main {
+  padding: 1.5rem;
+  min-height: 0;
+  overflow-y: auto;
+}

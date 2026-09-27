@@ -1,0 +1,27 @@
+<div class="page-header">
+  <div class="page-header__titulos">
+    <h1>Editar Pedido</h1>
+    <h2>Atualize os itens do pedido</h2>
+  </div>
+
+  @if (pedido()) {
+    <div class="page-header__acoes">
+      <button pButton type="button" severity="secondary" (click)="cancelar()">Cancelar</button>
+      <button pButton type="button" [loading]="salvando()" (click)="pedidoForm()?.submit()">
+        Salvar
+      </button>
+    </div>
+  }
+</div>
+
+@if (carregando()) {
+  <p>Carregando...</p>
+} @else if (!pedido()) {
+  <p-message severity="error">Pedido não encontrado.</p-message>
+} @else {
+  @if (erro()) {
+    <p-message severity="error">Não foi possível salvar as alterações. Tente novamente.</p-message>
+  }
+
+  <app-pedido-form [pedido]="pedido()" (salvar)="salvar($event)" />
+}

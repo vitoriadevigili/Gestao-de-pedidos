@@ -1,0 +1,1 @@
+import {bj as _d}from'./main-AI76VATY.js';var m=new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}),t=class e{transform(r){return r==null?"":m.format(r)}static \u0275fac=function(i){return new(i||e)};static \u0275pipe=_d({name:"moeda",type:e,pure:true})};export{t};

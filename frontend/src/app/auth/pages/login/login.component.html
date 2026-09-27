@@ -1,0 +1,54 @@
+<div class="login-page">
+  <p-card
+    class="login-page__card"
+    header="Entre em sua conta"
+    subheader="Bem-vindo de volta! Informe seus dados para continuar."
+  >
+    <form [formRoot]="form" class="login-form">
+      <div
+        class="login-form__campo"
+        [class.login-form__campo--invalido]="form.email().touched() && form.email().invalid()"
+      >
+        <label pLabel for="email">E-mail</label>
+        <input pInputText id="email" placeholder="E-mail" [formField]="form.email" />
+        @if (form.email().touched() && form.email().invalid()) {
+          @for (error of form.email().errors(); track error.kind) {
+            <p-message severity="error" size="small" variant="simple">{{
+              error.message
+            }}</p-message>
+          }
+        }
+      </div>
+      <div
+        class="login-form__campo"
+        [class.login-form__campo--invalido]="form.senha().touched() && form.senha().invalid()"
+      >
+        <label pLabel for="senha">Senha</label>
+        <p-password
+          inputId="senha"
+          placeholder="Senha"
+          [formField]="$any(form.senha)"
+          [feedback]="false"
+          toggleMask
+          fluid
+        />
+        @if (form.senha().touched() && form.senha().invalid()) {
+          @for (error of form.senha().errors(); track error.kind) {
+            <p-message severity="error" size="small" variant="simple">{{
+              error.message
+            }}</p-message>
+          }
+        }
+      </div>
+
+      <button pButton type="submit" class="login-form__botao" [loading]="form().submitting()">
+        Entrar
+      </button>
+    </form>
+
+    <p class="login-page__cadastro">
+      Não tem uma conta?
+      <a routerLink="/auth/cadastro" class="login-page__link">Cadastre-se</a>
+    </p>
+  </p-card>
+</div>

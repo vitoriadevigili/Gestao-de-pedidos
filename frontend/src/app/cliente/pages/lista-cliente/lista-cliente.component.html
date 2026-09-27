@@ -1,0 +1,98 @@
+<div class="page-header">
+  <div class="page-header__top">
+    <h1>Clientes</h1>
+    <button pButton (click)="adicionar()">Novo Cliente</button>
+  </div>
+
+  @if (clientes().length > 0) {
+    <h2>{{ clientes().length }} clientes cadastrados</h2>
+  } @else {
+    <h2>Nenhum cliente cadastrado</h2>
+  }
+</div>
+
+<div class="page-filters">
+  <p-iconfield iconPosition="left">
+    <p-inputicon>
+      <span class="material-symbols-outlined">search</span>
+    </p-inputicon>
+    <input
+      pInputText
+      type="text"
+      placeholder="Buscar cliente..."
+      (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+    />
+  </p-iconfield>
+</div>
+
+<div class="page-content">
+  <p-table
+    #dt
+    [value]="clientes()"
+    [globalFilterFields]="['nome', 'cnpj', 'telefone', 'email']"
+    [scrollable]="true"
+    scrollHeight="flex"
+  >
+    <ng-template #header>
+      <tr>
+        <th>Nome</th>
+        <th>CNPJ</th>
+        <th>Telefone</th>
+        <th>E-mail</th>
+        <th>Exige Nota Fiscal</th>
+        <th>Ativo</th>
+        <th>Ações</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-cliente>
+      <tr class="clickable-row" (click)="visualizar(cliente)">
+        <td>{{ cliente.nome }}</td>
+        <td>{{ cliente.cnpj | cnpj }}</td>
+        <td>{{ cliente.telefone | telefone }}</td>
+        <td>{{ cliente.email }}</td>
+        <td>
+          <p-tag [value]="labelExigeNotaFiscal(cliente.exigeNotaFiscal)" severity="secondary" />
+        </td>
+        <td>
+          <p-tag [value]="labelAtivo(cliente.ativo)" [severity]="severityAtivo(cliente.ativo)" />
+        </td>
+        <td>
+          <div class="actions">
+            <button
+              type="button"
+              pButton
+              iconOnly
+              [text]="true"
+              size="small"
+              (click)="editar(cliente); $event.stopPropagation()"
+              severity="secondary"
+            >
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+            <button
+              type="button"
+              pButton
+              iconOnly
+              [text]="true"
+              size="small"
+              (click)="deletar(cliente); $event.stopPropagation()"
+              severity="secondary"
+            >
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="7">
+          <div class="empty-message">
+            <span class="material-symbols-outlined">group_off</span>
+            <span>Nenhum cliente cadastrado</span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

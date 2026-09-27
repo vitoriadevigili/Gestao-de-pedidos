@@ -1,0 +1,16 @@
+<div class="page-header">
+  <h1>Novo Pedido</h1>
+  <h2>Preencha os dados do novo pedido</h2>
+  <div class="page-header__acoes">
+    <button pButton type="button" severity="secondary" (click)="cancelar()">Cancelar</button>
+    <button pButton type="button" [loading]="salvando()" (click)="pedidoForm.submit()">
+      Salvar
+    </button>
+  </div>
+</div>
+
+@if (erro()) {
+  <p-message severity="error">Não foi possível salvar o pedido. Tente novamente.</p-message>
+}
+
+<app-pedido-form #pedidoForm (salvar)="salvar($event)" />

@@ -1,0 +1,187 @@
+<div class="page-header">
+  <div class="page-header__top">
+    <div>
+      <h1>Dashboard</h1>
+      <h2>Visão geral do seu negócio — {{ periodoLabel() }}</h2>
+    </div>
+  </div>
+</div>
+
+<div class="page-filters dashboard-filters">
+  <div class="dashboard-filters__campo">
+    <label for="dataInicial">Data inicial</label>
+    <p-datepicker
+      inputId="dataInicial"
+      [(ngModel)]="dataInicial"
+      dateFormat="dd/mm/yy"
+      [showIcon]="true"
+      iconDisplay="input"
+      placeholder="Selecione a data inicial"
+    />
+  </div>
+
+  <div class="dashboard-filters__campo">
+    <label for="dataFinal">Data final</label>
+    <p-datepicker
+      inputId="dataFinal"
+      [(ngModel)]="dataFinal"
+      dateFormat="dd/mm/yy"
+      [showIcon]="true"
+      iconDisplay="input"
+      placeholder="Selecione a data final"
+    />
+  </div>
+
+  <button pButton (click)="filtrar()">Filtrar</button>
+  <button pButton severity="secondary" [text]="true" (click)="limparFiltro()">Limpar</button>
+</div>
+
+<div class="dashboard-cards">
+  <div class="stat-card">
+    <div class="stat-card__top">
+      <span>Faturamento Total</span>
+      <div class="stat-card__icon stat-card__icon--azul">
+        <span class="material-symbols-outlined">attach_money</span>
+      </div>
+    </div>
+    <strong class="stat-card__value">{{ cardsResumo()?.faturamentoTotal ?? 0 | moeda }}</strong>
+    <div
+      class="stat-card__growth"
+      [class]="'stat-card__growth--' + sinalCrescimento(cardsResumo()?.crescimentoFaturamento)"
+    >
+      <span class="material-symbols-outlined">{{
+        iconeCrescimento(cardsResumo()?.crescimentoFaturamento)
+      }}</span>
+      <span
+        >{{ formatarPercentual(cardsResumo()?.crescimentoFaturamento) }} vs. período anterior</span
+      >
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-card__top">
+      <span>Pedidos no Período</span>
+      <div class="stat-card__icon stat-card__icon--verde">
+        <span class="material-symbols-outlined">shopping_cart</span>
+      </div>
+    </div>
+    <strong class="stat-card__value">{{ cardsResumo()?.pedidosPeriodo ?? 0 }}</strong>
+    <div
+      class="stat-card__growth"
+      [class]="'stat-card__growth--' + sinalCrescimento(cardsResumo()?.crescimentoPedidos)"
+    >
+      <span class="material-symbols-outlined">{{
+        iconeCrescimento(cardsResumo()?.crescimentoPedidos)
+      }}</span>
+      <span>{{ formatarPercentual(cardsResumo()?.crescimentoPedidos) }} vs. período anterior</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-card__top">
+      <span>Clientes Ativos</span>
+      <div class="stat-card__icon stat-card__icon--roxo">
+        <span class="material-symbols-outlined">group</span>
+      </div>
+    </div>
+    <strong class="stat-card__value">{{ cardsResumo()?.clientesAtivos ?? 0 }}</strong>
+    <div
+      class="stat-card__growth"
+      [class]="'stat-card__growth--' + sinalCrescimento(cardsResumo()?.crescimentoClientesAtivos)"
+    >
+      <span class="material-symbols-outlined">{{
+        iconeCrescimento(cardsResumo()?.crescimentoClientesAtivos)
+      }}</span>
+      <span
+        >{{ formatarCrescimentoClientes(cardsResumo()?.crescimentoClientesAtivos) }} vs. período
+        anterior</span
+      >
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <div class="dashboard-panel">
+    <div class="dashboard-panel__header">
+      <div>
+        <h3>Faturamento no Período</h3>
+        <span>Evolução do faturamento nos últimos 6 meses</span>
+      </div>
+      <span class="material-symbols-outlined">show_chart</span>
+    </div>
+
+    @if (evolucao().length > 0) {
+      <div class="dashboard-panel__chart">
+        <p-chart type="line" [data]="chartData()" [options]="chartOptions" />
+      </div>
+    } @else {
+      <div class="empty-message">
+        <span class="material-symbols-outlined">show_chart</span>
+        <span>Nenhum dado no período selecionado</span>
+      </div>
+    }
+  </div>
+
+  <div class="dashboard-panel">
+    <div class="dashboard-panel__header">
+      <div>
+        <h3>Top 3 Produtos Vendidos</h3>
+        <span>Quantidade vendida por produto no período</span>
+      </div>
+      <span class="material-symbols-outlined">emoji_events</span>
+    </div>
+
+    @if (topProdutos().length > 0) {
+      <div class="dashboard-ranking">
+        @for (produto of topProdutos(); track produto.nomeProduto; let posicao = $index) {
+          <div class="dashboard-ranking__item">
+            <div class="dashboard-ranking__posicao" [class]="'dashboard-ranking__posicao--' + posicao">
+              {{ posicao + 1 }}
+            </div>
+            <strong class="dashboard-ranking__nome">{{ produto.nomeProduto }}</strong>
+            <span class="dashboard-ranking__quantidade"
+              >{{ produto.quantidadeVendida }} vendidos</span
+            >
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-message">
+        <span class="material-symbols-outlined">emoji_events</span>
+        <span>Nenhum dado no período selecionado</span>
+      </div>
+    }
+  </div>
+</div>
+
+<div class="dashboard-panel">
+  <div class="dashboard-panel__header">
+    <h3>Últimos Pedidos</h3>
+    <a class="dashboard-panel__link" (click)="verTodosPedidos()">Ver todos</a>
+  </div>
+
+  @if (ultimosPedidos().length > 0) {
+    <div class="dashboard-list">
+      @for (pedido of ultimosPedidos(); track pedido.id) {
+        <div class="dashboard-list__item">
+          <div class="dashboard-list__icon">
+            <span class="material-symbols-outlined">shopping_cart</span>
+          </div>
+          <div class="dashboard-list__info">
+            <strong>{{ pedido.nomeCliente }}</strong>
+            <span
+              >#{{ pedido.id.toString().padStart(5, '0') }} ·
+              {{ pedido.valorTotal | moeda }}</span
+            >
+          </div>
+          <strong class="dashboard-list__valor">{{ pedido.data | date: 'dd/MM/yyyy' }}</strong>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-message">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <span>Nenhum pedido no período selecionado</span>
+    </div>
+  }
+</div>

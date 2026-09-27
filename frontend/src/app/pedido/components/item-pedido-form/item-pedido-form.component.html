@@ -1,0 +1,64 @@
+<form [formRoot]="itemForm" class="item-pedido-form">
+  <div class="item-pedido-form__campos">
+    <div
+      class="item-pedido-form__campo"
+      [class.item-pedido-form__campo--invalido]="
+        itemForm.produtoId().invalid() && itemForm.produtoId().touched()
+      "
+    >
+      <label for="produtoId">Produto</label>
+      <p-select
+        inputId="produtoId"
+        [formField]="$any(itemForm.produtoId)"
+        [options]="produtos()"
+        optionLabel="nome"
+        optionValue="id"
+        [filter]="true"
+        filterBy="nome"
+        placeholder="Selecione um produto"
+        fluid
+        (onChange)="onProdutoAlterado($event.value)"
+      />
+      @if (itemForm.produtoId().invalid() && itemForm.produtoId().touched()) {
+        <p-message severity="error" size="small" variant="simple">Produto é obrigatório</p-message>
+      }
+    </div>
+
+    <div
+      class="item-pedido-form__campo"
+      [class.item-pedido-form__campo--invalido]="
+        itemForm.quantidade().invalid() && itemForm.quantidade().touched()
+      "
+    >
+      <label for="quantidade">Quantidade</label>
+      <p-inputnumber inputId="quantidade" [formField]="$any(itemForm.quantidade)" [min]="1" fluid />
+      @if (itemForm.quantidade().invalid() && itemForm.quantidade().touched()) {
+        <p-message severity="error" size="small" variant="simple">Mínimo 1</p-message>
+      }
+    </div>
+
+    <div
+      class="item-pedido-form__campo"
+      [class.item-pedido-form__campo--invalido]="
+        itemForm.valorUnitario().invalid() && itemForm.valorUnitario().touched()
+      "
+    >
+      <label for="valorUnitario">Valor Unitário</label>
+      <p-inputnumber
+        inputId="valorUnitario"
+        [formField]="$any(itemForm.valorUnitario)"
+        mode="currency"
+        currency="BRL"
+        locale="pt-BR"
+        fluid
+      />
+      @if (itemForm.valorUnitario().invalid() && itemForm.valorUnitario().touched()) {
+        <p-message severity="error" size="small" variant="simple">Maior que zero</p-message>
+      }
+    </div>
+  </div>
+
+  <div class="item-pedido-form__acoes">
+    <ng-content select="[itemPedidoFormAcoes]" />
+  </div>
+</form>

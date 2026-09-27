@@ -1,0 +1,93 @@
+<div class="page-header">
+  <div class="page-header__titulos">
+    <h1>Meu Perfil</h1>
+    <h2>Visualize e edite os seus dados</h2>
+  </div>
+
+  @if (!carregando() && !erroCarregar()) {
+    <div class="page-header__acoes">
+      @if (editando()) {
+        <button pButton type="button" severity="secondary" (click)="cancelar()">Cancelar</button>
+        <button pButton type="button" [loading]="salvando()" (click)="salvar()">Salvar</button>
+      } @else {
+        <button pButton type="button" (click)="editar()">Editar</button>
+      }
+    </div>
+  }
+</div>
+
+@if (carregando()) {
+  <p>Carregando...</p>
+} @else if (!erroCarregar()) {
+  <form [formRoot]="perfilForm" class="perfil-form">
+    <div class="perfil-form__secoes">
+      <p-card class="perfil-form__secao" header="Dados Pessoais">
+        <div class="perfil-form__campos">
+          <div class="perfil-form__campo">
+            <label pLabel for="nome">Nome</label>
+            <input pInputText id="nome" [formField]="perfilForm.nome" />
+            @if (perfilForm.nome().touched() && perfilForm.nome().invalid()) {
+              @for (error of perfilForm.nome().errors(); track error.kind) {
+                <p-message severity="error" size="small" variant="simple">{{
+                  error.message
+                }}</p-message>
+              }
+            }
+          </div>
+
+          <div class="perfil-form__campo">
+            <label pLabel for="email">E-mail</label>
+            <input pInputText id="email" type="email" [formField]="perfilForm.email" />
+            @if (perfilForm.email().touched() && perfilForm.email().invalid()) {
+              @for (error of perfilForm.email().errors(); track error.kind) {
+                <p-message severity="error" size="small" variant="simple">{{
+                  error.message
+                }}</p-message>
+              }
+            }
+          </div>
+        </div>
+      </p-card>
+
+      <p-card class="perfil-form__secao" header="Alterar Senha">
+        <div class="perfil-form__campos">
+          <div class="perfil-form__campo">
+            <label pLabel for="senhaAtual">Senha Atual</label>
+            <p-password
+              inputId="senhaAtual"
+              [formField]="$any(perfilForm.senhaAtual)"
+              [feedback]="false"
+              toggleMask
+              fluid
+            />
+            @if (perfilForm.senhaAtual().touched() && perfilForm.senhaAtual().invalid()) {
+              @for (error of perfilForm.senhaAtual().errors(); track error.kind) {
+                <p-message severity="error" size="small" variant="simple">{{
+                  error.message
+                }}</p-message>
+              }
+            }
+          </div>
+
+          <div class="perfil-form__campo">
+            <label pLabel for="novaSenha">Nova Senha</label>
+            <p-password
+              inputId="novaSenha"
+              [formField]="$any(perfilForm.novaSenha)"
+              [feedback]="false"
+              toggleMask
+              fluid
+            />
+            @if (perfilForm.novaSenha().touched() && perfilForm.novaSenha().invalid()) {
+              @for (error of perfilForm.novaSenha().errors(); track error.kind) {
+                <p-message severity="error" size="small" variant="simple">{{
+                  error.message
+                }}</p-message>
+              }
+            }
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </form>
+}

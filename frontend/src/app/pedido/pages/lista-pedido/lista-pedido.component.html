@@ -1,0 +1,92 @@
+<div class="page-header">
+  <div class="page-header__top">
+    <h1>Pedidos</h1>
+    <button pButton (click)="adicionar()">Novo Pedido</button>
+  </div>
+
+  @if (pedidos().length > 0) {
+    <h2>{{ pedidos().length }} pedidos cadastrados</h2>
+  } @else {
+    <h2>Nenhum pedido cadastrado</h2>
+  }
+</div>
+
+<div class="page-filters">
+  <p-iconfield iconPosition="left">
+    <p-inputicon>
+      <span class="material-symbols-outlined">search</span>
+    </p-inputicon>
+    <input
+      pInputText
+      type="text"
+      placeholder="Buscar pedido..."
+      (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+    />
+  </p-iconfield>
+</div>
+
+<div class="page-content">
+  <p-table
+    #dt
+    [value]="pedidos()"
+    [globalFilterFields]="['nomeCliente']"
+    [scrollable]="true"
+    scrollHeight="flex"
+  >
+    <ng-template #header>
+      <tr>
+        <th>Nº Pedido</th>
+        <th>Data</th>
+        <th>Cliente</th>
+        <th>Itens</th>
+        <th>Valor Total</th>
+        <th>Ações</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-pedido>
+      <tr class="clickable-row" (click)="visualizar(pedido)">
+        <td>{{ pedido.id }}</td>
+        <td>{{ pedido.data | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ pedido.nomeCliente }}</td>
+        <td>{{ pedido.itens.length }}</td>
+        <td>{{ pedido.valorTotal | moeda }}</td>
+        <td>
+          <div class="actions">
+            <button
+              type="button"
+              pButton
+              iconOnly
+              [text]="true"
+              size="small"
+              (click)="editar(pedido); $event.stopPropagation()"
+              severity="secondary"
+            >
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+            <button
+              type="button"
+              pButton
+              iconOnly
+              [text]="true"
+              size="small"
+              (click)="deletar(pedido); $event.stopPropagation()"
+              severity="secondary"
+            >
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="6">
+          <div class="empty-message">
+            <span class="material-symbols-outlined">receipt_long</span>
+            <span>Nenhum pedido cadastrado</span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

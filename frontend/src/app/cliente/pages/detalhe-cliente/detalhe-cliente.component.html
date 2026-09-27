@@ -1,0 +1,30 @@
+<div class="page-header">
+  <div class="page-header__titulo">
+    <button
+      type="button"
+      pButton
+      iconOnly
+      [text]="true"
+      severity="secondary"
+      aria-label="Voltar"
+      (click)="voltar()"
+    >
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h1>Detalhes do Cliente</h1>
+  </div>
+  @if (cliente()) {
+    <div class="page-header__acoes">
+      <button pButton type="button" severity="danger" (click)="excluir()">Excluir</button>
+      <button pButton type="button" (click)="editar()">Editar</button>
+    </div>
+  }
+</div>
+
+@if (carregando()) {
+  <p>Carregando...</p>
+} @else if (!cliente()) {
+  <p-message severity="error">Cliente não encontrado.</p-message>
+} @else {
+  <app-cliente-form [cliente]="cliente()" [somenteLeitura]="true" />
+}

@@ -1,0 +1,23 @@
+<div class="page-header">
+  <div class="page-header__titulos">
+    <h1>Editar Cliente</h1>
+    <h2>Atualize os dados do cliente</h2>
+  </div>
+
+  @if (cliente()) {
+    <div class="page-header__acoes">
+      <button pButton type="button" severity="secondary" (click)="cancelar()">Cancelar</button>
+      <button pButton type="button" [loading]="salvando()" (click)="clienteForm()?.submit()">
+        Salvar
+      </button>
+    </div>
+  }
+</div>
+
+@if (carregando()) {
+  <p>Carregando...</p>
+} @else if (!cliente()) {
+  <p-message severity="error">Cliente não encontrado.</p-message>
+} @else {
+  <app-cliente-form [cliente]="cliente()" (salvar)="salvar($event)" />
+}

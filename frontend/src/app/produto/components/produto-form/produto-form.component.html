@@ -1,0 +1,47 @@
+<form [formRoot]="produtoForm" class="produto-form">
+  <div class="produto-form__campos">
+    <div
+      class="produto-form__campo"
+      [class.produto-form__campo--invalido]="
+        produtoForm.nome().invalid() && produtoForm.nome().touched()
+      "
+    >
+      <label for="nome">Nome</label>
+      <input pInputText id="nome" [formField]="produtoForm.nome" />
+      @if (produtoForm.nome().invalid() && produtoForm.nome().touched()) {
+        <p-message severity="error" size="small" variant="simple">Nome é obrigatório</p-message>
+      }
+    </div>
+
+    <div
+      class="produto-form__campo"
+      [class.produto-form__campo--invalido]="
+        produtoForm.valorBase().invalid() && produtoForm.valorBase().touched()
+      "
+    >
+      <label for="valorBase">Valor Base</label>
+      <p-inputnumber
+        inputId="valorBase"
+        [formField]="$any(produtoForm.valorBase)"
+        mode="currency"
+        currency="BRL"
+        locale="pt-BR"
+        fluid
+      />
+      @if (produtoForm.valorBase().invalid() && produtoForm.valorBase().touched()) {
+        <p-message severity="error" size="small" variant="simple">
+          Informe um valor base válido
+        </p-message>
+      }
+    </div>
+
+    <div class="produto-form__campo produto-form__campo--opcao">
+      <p-toggleswitch inputId="ativo" [formField]="produtoForm.ativo" />
+      <label for="ativo">Produto Ativo</label>
+    </div>
+  </div>
+
+  <div class="produto-form__acoes">
+    <ng-content select="[produtoFormAcoes]" />
+  </div>
+</form>

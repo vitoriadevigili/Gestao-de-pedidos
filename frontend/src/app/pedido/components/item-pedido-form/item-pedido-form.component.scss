@@ -1,0 +1,51 @@
+.item-pedido-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__campos {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  &__campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    // O Angular Signal Forms reflete o estado "invalid" nos componentes do
+    // PrimeNG assim que o formulário é montado, antes de qualquer interação
+    // do usuário. Componentes como p-select/p-inputnumber aplicam essa cor de
+    // borda diretamente no próprio elemento, então uma variável redefinida só
+    // no wrapper não é suficiente: é preciso sobrescrever com !important
+    // direto no elemento (via ::ng-deep) para vencer.
+    &:not(&--invalido) {
+      ::ng-deep p-select,
+      ::ng-deep p-inputnumber,
+      ::ng-deep input {
+        --p-select-invalid-border-color: var(--p-inputtext-border-color) !important;
+        --p-inputtext-invalid-border-color: var(--p-inputtext-border-color) !important;
+        --p-inputnumber-invalid-border-color: var(--p-inputtext-border-color) !important;
+        --p-select-invalid-placeholder-color: var(--p-inputtext-placeholder-color) !important;
+        --p-inputtext-invalid-placeholder-color: var(--p-inputtext-placeholder-color) !important;
+        --p-inputnumber-invalid-placeholder-color: var(--p-inputtext-placeholder-color) !important;
+      }
+    }
+  }
+
+  &__acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+
+    &:empty {
+      display: none;
+    }
+  }
+}

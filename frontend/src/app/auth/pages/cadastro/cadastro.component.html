@@ -1,0 +1,62 @@
+<div class="cadastro-page">
+  <p-card
+    class="cadastro-page__card"
+    header="Crie sua conta"
+    subheader="Preencha os dados abaixo para começar a usar o sistema."
+  >
+    <form [formRoot]="form" class="cadastro-form">
+      <div
+        class="cadastro-form__campo"
+        [class.cadastro-form__campo--invalido]="form.nome().touched() && form.nome().invalid()"
+      >
+        <label pLabel for="nome">Nome</label>
+        <input pInputText id="nome" placeholder="Nome" [formField]="form.nome" />
+        @if (form.nome().touched() && form.nome().invalid()) {
+          @for (error of form.nome().errors(); track error.kind) {
+            <p-message severity="error" size="small" variant="simple">{{ error.message }}</p-message>
+          }
+        }
+      </div>
+      <div
+        class="cadastro-form__campo"
+        [class.cadastro-form__campo--invalido]="form.email().touched() && form.email().invalid()"
+      >
+        <label pLabel for="email">E-mail</label>
+        <input pInputText id="email" placeholder="E-mail" [formField]="form.email" />
+        @if (form.email().touched() && form.email().invalid()) {
+          @for (error of form.email().errors(); track error.kind) {
+            <p-message severity="error" size="small" variant="simple">{{ error.message }}</p-message>
+          }
+        }
+      </div>
+      <div
+        class="cadastro-form__campo"
+        [class.cadastro-form__campo--invalido]="form.senha().touched() && form.senha().invalid()"
+      >
+        <label pLabel for="senha">Senha</label>
+        <p-password
+          inputId="senha"
+          placeholder="Senha"
+          [formField]="$any(form.senha)"
+          [feedback]="false"
+          toggleMask
+          fluid
+        />
+        @if (form.senha().touched() && form.senha().invalid()) {
+          @for (error of form.senha().errors(); track error.kind) {
+            <p-message severity="error" size="small" variant="simple">{{ error.message }}</p-message>
+          }
+        }
+      </div>
+
+      <button pButton type="submit" class="cadastro-form__botao" [loading]="form().submitting()">
+        Cadastrar
+      </button>
+    </form>
+
+    <p class="cadastro-page__login">
+      Já tem uma conta?
+      <a routerLink="/auth/login" class="cadastro-page__link">Entrar</a>
+    </p>
+  </p-card>
+</div>

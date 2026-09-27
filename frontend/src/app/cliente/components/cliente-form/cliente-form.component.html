@@ -1,0 +1,236 @@
+<form [formRoot]="clienteForm" class="cliente-form">
+  <div class="cliente-form__secoes">
+    <p-card class="cliente-form__secao" header="Dados Pessoais">
+      <div class="cliente-form__campos">
+        <div
+          class="cliente-form__campo"
+          [class.cliente-form__campo--invalido]="
+            (clienteForm.nome().invalid() && clienteForm.nome().touched()) ||
+            erroServidor()['nome']?.length
+          "
+        >
+          <label for="nome">Nome Fantasia</label>
+          <input pInputText id="nome" [formField]="clienteForm.nome" />
+          @if (clienteForm.nome().invalid() && clienteForm.nome().touched()) {
+            <p-message severity="error" size="small" variant="simple">Nome é obrigatório</p-message>
+          }
+          @for (mensagem of erroServidor()['nome']; track mensagem) {
+            <p-message severity="error" size="small" variant="simple">{{ mensagem }}</p-message>
+          }
+        </div>
+
+        <div
+          class="cliente-form__campo"
+          [class.cliente-form__campo--invalido]="
+            (clienteForm.cnpj().invalid() && clienteForm.cnpj().touched()) ||
+            erroServidor()['cnpj']?.length
+          "
+        >
+          <label for="cnpj">CNPJ</label>
+          <p-inputmask
+            inputId="cnpj"
+            [formField]="$any(clienteForm.cnpj)"
+            mask="**.***.***/****-99"
+            fluid
+            [unmask]="true"
+          />
+          @if (clienteForm.cnpj().invalid() && clienteForm.cnpj().touched()) {
+            <p-message severity="error" size="small" variant="simple">CNPJ é obrigatório</p-message>
+          }
+          @for (mensagem of erroServidor()['cnpj']; track mensagem) {
+            <p-message severity="error" size="small" variant="simple">{{ mensagem }}</p-message>
+          }
+        </div>
+
+        <div
+          class="cliente-form__campo"
+          [class.cliente-form__campo--invalido]="
+            (clienteForm.email().invalid() && clienteForm.email().touched()) ||
+            erroServidor()['email']?.length
+          "
+        >
+          <label for="email">E-mail</label>
+          <input pInputText id="email" type="email" [formField]="clienteForm.email" />
+          @if (clienteForm.email().invalid() && clienteForm.email().touched()) {
+            <p-message severity="error" size="small" variant="simple">
+              Informe um e-mail válido
+            </p-message>
+          }
+          @for (mensagem of erroServidor()['email']; track mensagem) {
+            <p-message severity="error" size="small" variant="simple">{{ mensagem }}</p-message>
+          }
+        </div>
+
+        <div
+          class="cliente-form__campo"
+          [class.cliente-form__campo--invalido]="
+            (clienteForm.telefone().invalid() && clienteForm.telefone().touched()) ||
+            erroServidor()['telefone']?.length
+          "
+        >
+          <label for="telefone">Telefone</label>
+          <p-inputmask
+            inputId="telefone"
+            [formField]="$any(clienteForm.telefone)"
+            fluid
+            [mask]="telefoneMask()"
+            [unmask]="true"
+          />
+          @if (clienteForm.telefone().invalid() && clienteForm.telefone().touched()) {
+            <p-message severity="error" size="small" variant="simple">
+              Telefone é obrigatório
+            </p-message>
+          }
+          @for (mensagem of erroServidor()['telefone']; track mensagem) {
+            <p-message severity="error" size="small" variant="simple">{{ mensagem }}</p-message>
+          }
+        </div>
+
+        <div class="cliente-form__campo cliente-form__campo--opcao">
+          <label for="exigeNotaFiscal">Exige Nota Fiscal</label>
+          <p-toggleswitch inputId="exigeNotaFiscal" [formField]="clienteForm.exigeNotaFiscal" />
+        </div>
+
+        <div class="cliente-form__campo cliente-form__campo--opcao">
+          <label for="ativo">Cliente Ativo</label>
+          <p-toggleswitch inputId="ativo" [formField]="clienteForm.ativo" />
+        </div>
+      </div>
+    </p-card>
+
+    <p-card class="cliente-form__secao" header="Endereço">
+      <div class="cliente-form__campos">
+        <div
+          class="cliente-form__campo"
+          [class.cliente-form__campo--invalido]="
+            (clienteForm.endereco.cep().invalid() && clienteForm.endereco.cep().touched()) ||
+            erroServidor()['endereco.cep']?.length
+          "
+        >
+          <label for="cep">CEP</label>
+          <p-inputmask
+            inputId="cep"
+            [formField]="$any(clienteForm.endereco.cep)"
+            mask="99999-999"
+            fluid
+            [unmask]="true"
+            (onBlur)="buscarCep()"
+          />
+          @if (buscandoCep()) {
+            <p-message severity="secondary" size="small" variant="simple"
+              >Buscando CEP...</p-message
+            >
+          } @else if (erroCep()) {
+            <p-message severity="error" size="small" variant="simple">CEP não encontrado</p-message>
+          } @else if (
+            clienteForm.endereco.cep().invalid() && clienteForm.endereco.cep().touched()
+          ) {
+            <p-message severity="error" size="small" variant="simple"
+              >CEP deve conter 8 números</p-message
+            >
+          }
+          @for (mensagem of erroServidor()['endereco.cep']; track mensagem) {
+            <p-message severity="error" size="small" variant="simple">{{ mensagem }}</p-message>
+          }
+        </div>
+
+        <div
+          class="cliente-form__campo"
+          [class.cliente-form__campo--invalido]="
+            (clienteForm.endereco.estado().invalid() && clienteForm.endereco.estado().touched()) ||
+            erroServidor()['endereco.estado']?.length
+          "
+        >
+          <label for="estado">Estado</label>
+          <input pInputText id="estado" [formField]="clienteForm.endereco.estado" />
+          @if (clienteForm.endereco.estado().invalid() && clienteForm.endereco.estado().touched()) {
+            <p-message severity="error" size="small" variant="simple"
+              >Estado é obrigatório</p-message
+            >
+          }
+          @for (mensagem of erroServidor()['endereco.estado']; track mensagem) {
+            <p-message severity="error" size="small" variant="simple">{{ mensagem }}</p-message>
+          }
+        </div>
+
+        <div
+          class="cliente-form__campo"
+          [class.cliente-form__campo--invalido]="
+            (clienteForm.endereco.cidade().invalid() && clienteForm.endereco.cidade().touched()) ||
+            erroServidor()['endereco.cidade']?.length
+          "
+        >
+          <label for="cidade">Cidade</label>
+          <input pInputText id="cidade" [formField]="clienteForm.endereco.cidade" />
+          @if (clienteForm.endereco.cidade().invalid() && clienteForm.endereco.cidade().touched()) {
+            <p-message severity="error" size="small" variant="simple"
+              >Cidade é obrigatória</p-message
+            >
+          }
+          @for (mensagem of erroServidor()['endereco.cidade']; track mensagem) {
+            <p-message severity="error" size="small" variant="simple">{{ mensagem }}</p-message>
+          }
+        </div>
+
+        <div
+          class="cliente-form__campo"
+          [class.cliente-form__campo--invalido]="
+            (clienteForm.endereco.bairro().invalid() && clienteForm.endereco.bairro().touched()) ||
+            erroServidor()['endereco.bairro']?.length
+          "
+        >
+          <label for="bairro">Bairro</label>
+          <input pInputText id="bairro" [formField]="clienteForm.endereco.bairro" />
+          @if (clienteForm.endereco.bairro().invalid() && clienteForm.endereco.bairro().touched()) {
+            <p-message severity="error" size="small" variant="simple"
+              >Bairro é obrigatório</p-message
+            >
+          }
+          @for (mensagem of erroServidor()['endereco.bairro']; track mensagem) {
+            <p-message severity="error" size="small" variant="simple">{{ mensagem }}</p-message>
+          }
+        </div>
+
+        <div
+          class="cliente-form__campo"
+          [class.cliente-form__campo--invalido]="
+            (clienteForm.endereco.rua().invalid() && clienteForm.endereco.rua().touched()) ||
+            erroServidor()['endereco.rua']?.length
+          "
+        >
+          <label for="rua">Rua</label>
+          <input pInputText id="rua" [formField]="clienteForm.endereco.rua" />
+          @if (clienteForm.endereco.rua().invalid() && clienteForm.endereco.rua().touched()) {
+            <p-message severity="error" size="small" variant="simple">Rua é obrigatória</p-message>
+          }
+          @for (mensagem of erroServidor()['endereco.rua']; track mensagem) {
+            <p-message severity="error" size="small" variant="simple">{{ mensagem }}</p-message>
+          }
+        </div>
+
+        <div
+          class="cliente-form__campo"
+          [class.cliente-form__campo--invalido]="
+            (clienteForm.endereco.numero().invalid() && clienteForm.endereco.numero().touched()) ||
+            erroServidor()['endereco.numero']?.length
+          "
+        >
+          <label for="numero">Número</label>
+          <input pInputText id="numero" type="number" [formField]="clienteForm.endereco.numero" />
+          @if (clienteForm.endereco.numero().invalid() && clienteForm.endereco.numero().touched()) {
+            <p-message severity="error" size="small" variant="simple"
+              >Número é obrigatório</p-message
+            >
+          }
+          @for (mensagem of erroServidor()['endereco.numero']; track mensagem) {
+            <p-message severity="error" size="small" variant="simple">{{ mensagem }}</p-message>
+          }
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <div class="cliente-form__acoes">
+    <ng-content select="[clienteFormAcoes]" />
+  </div>
+</form>

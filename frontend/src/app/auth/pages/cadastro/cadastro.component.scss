@@ -1,0 +1,71 @@
+:host {
+  display: flex;
+  min-height: 100vh;
+}
+
+.cadastro-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 1.5rem;
+
+  &__card {
+    width: 100%;
+    max-width: 26rem;
+    border: 1px solid var(--p-content-border-color, rgba(255, 255, 255, 0.1));
+    --p-card-title-font-size: 1.75rem;
+  }
+
+  &__login {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+  }
+
+  &__link {
+    color: var(--p-primary-color);
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.cadastro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  &__campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+    }
+
+    // O Angular Signal Forms reflete o estado "invalid" nos componentes do
+    // PrimeNG assim que o formulário é montado, antes de qualquer interação
+    // do usuário. Sobrescrever a variável (em vez da classe .p-invalid) garante
+    // que o campo só apareça com a borda de erro após o usuário interagir.
+    &:not(&--invalido) {
+      --p-inputtext-invalid-border-color: var(--p-inputtext-border-color);
+      --p-inputtext-invalid-placeholder-color: var(--p-inputtext-placeholder-color);
+    }
+  }
+
+  &__botao {
+    margin-top: 0.5rem;
+    width: 40%;
+    align-self: center;
+  }
+}

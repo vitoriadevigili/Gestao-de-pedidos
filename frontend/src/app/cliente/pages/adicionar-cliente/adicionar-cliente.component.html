@@ -1,0 +1,12 @@
+<div class="page-header">
+  <h1>Novo Cliente</h1>
+  <h2>Preencha os dados do novo cliente</h2>
+  <div class="page-header__acoes">
+    <button pButton type="button" severity="secondary" (click)="cancelar()">Cancelar</button>
+    <button pButton type="button" [loading]="salvando()" (click)="clienteForm()?.submit()">
+      Salvar
+    </button>
+  </div>
+</div>
+
+<app-cliente-form (salvar)="salvar($event)" />
