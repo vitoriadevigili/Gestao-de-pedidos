@@ -3,6 +3,7 @@ package com.app.auth.service;
 import com.app.auth.model.dto.CadastroRequest;
 import com.app.auth.model.dto.LoginRequest;
 import com.app.auth.security.JwtService;
+import com.app.auth.security.TokenRevogadoService;
 import com.app.auth.security.UsuarioDetails;
 import com.app.usuario.model.entity.Usuario;
 import com.app.usuario.repository.UsuarioRepository;
@@ -21,17 +22,20 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final TokenRevogadoService tokenRevogadoService;
 
     public AuthService(
             UsuarioRepository usuarioRepository,
             PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
-            JwtService jwtService
+            JwtService jwtService,
+            TokenRevogadoService tokenRevogadoService
     ) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.tokenRevogadoService = tokenRevogadoService;
     }
 
     @Transactional
@@ -57,5 +61,9 @@ public class AuthService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         return jwtService.gerarToken(new UsuarioDetails(usuario));
+    }
+
+    public void logout(String token) {
+        tokenRevogadoService.revogar(token, jwtService.extrairExpiracao(token));
     }
 }

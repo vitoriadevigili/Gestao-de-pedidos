@@ -16,4 +16,8 @@ export class UsuarioService {
   public atualizarPerfil(perfil: AtualizarPerfilRequest): Observable<Usuario> {
     return this.http.put<Usuario>(`${this.BASE_URL}/perfil`, perfil);
   }
+
+  public excluirConta(): Observable<void> {
+    return this.http.delete<void>(`${this.BASE_URL}/perfil`);
+  }
 }

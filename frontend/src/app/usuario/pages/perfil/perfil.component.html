@@ -10,6 +10,10 @@
         <button pButton type="button" severity="secondary" (click)="cancelar()">Cancelar</button>
         <button pButton type="button" [loading]="salvando()" (click)="salvar()">Salvar</button>
       } @else {
+        <button pButton type="button" severity="secondary" [loading]="saindo()" (click)="sair()">
+          Sair
+        </button>
+        <button pButton type="button" severity="danger" (click)="excluir()">Excluir</button>
         <button pButton type="button" (click)="editar()">Editar</button>
       }
     </div>

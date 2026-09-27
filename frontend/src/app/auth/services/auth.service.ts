@@ -21,6 +21,10 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.BASE_URL}/login`, data);
   }
 
+  public sair(): Observable<void> {
+    return this.http.post<void>(`${this.BASE_URL}/logout`, null);
+  }
+
   public salvarToken(token: string): void {
     localStorage.setItem(TOKEN_KEY, token);
   }

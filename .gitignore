@@ -4,7 +4,13 @@
 
 # Variáveis de ambiente
 .env
+.env.*
 *.env
+!.env.example
+
+# Logs
+*.log
+logs/
 
 # Arquivos de sistema
 .DS_Store
@@ -61,10 +67,11 @@ backend/HELP.md
 backend/target/
 backend/build/
 backend/.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-!**/src/main/**/build/
-!**/src/test/**/build/
+
+# Configuração local com credenciais (não versionar)
+backend/src/main/resources/application-local.yaml
+backend/src/main/resources/application-local.yml
+backend/src/main/resources/application-local.properties
 
 ##########################################
 ### Frontend (Angular)
@@ -78,15 +85,11 @@ frontend/bazel-out/
 
 # Node
 frontend/node_modules/
-npm-debug.log
-yarn-error.log
 
 # Angular / diversos
-frontend/.angular/cache/
+frontend/.angular/
 .sass-cache/
 frontend/connect.lock
 frontend/coverage/
-frontend/libpeerconnection.log
-testem.log
 frontend/typings/
 __screenshots__/

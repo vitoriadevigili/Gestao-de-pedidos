@@ -3,9 +3,9 @@ spring:
     name: Gestão pedidos
 
   datasource:
-    url: ${MYSQL_URL}
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: root
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -18,8 +18,8 @@ spring:
         default_schema: gestao_pedidos
 
 jwt:
-  secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION}
+  secret: zRRqCZDWq7sZqTjhs0bo0inCUyct67Wm
+  expiration: 86400000
 
 server:
   port: 8089

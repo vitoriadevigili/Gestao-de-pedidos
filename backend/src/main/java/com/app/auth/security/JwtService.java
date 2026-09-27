@@ -45,8 +45,12 @@ public class JwtService {
         return id.equals(userDetails.getId()) && !tokenExpirado(token);
     }
 
+    public Date extrairExpiracao(String token) {
+        return extrairClaim(token, Claims::getExpiration);
+    }
+
     private boolean tokenExpirado(String token) {
-        return extrairClaim(token, Claims::getExpiration).before(new Date());
+        return extrairExpiracao(token).before(new Date());
     }
 
     private <T> T extrairClaim(String token, Function<Claims, T> resolver) {
