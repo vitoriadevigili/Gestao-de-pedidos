@@ -240,7 +240,7 @@ INSERT INTO gestao_pedidos.pedido VALUES (1, '2026-06-05', 450.00, 3, 2);
 INSERT INTO gestao_pedidos.pedido VALUES (2, '2026-08-07', 400.00, 7, 2);
 INSERT INTO gestao_pedidos.pedido VALUES (3, '2026-07-23', 1100.00, 2, 2);
 INSERT INTO gestao_pedidos.pedido VALUES (4, '2026-09-10', 1080.00, 5, 2);
-INSERT INTO gestao_pedidos.pedido VALUES (6, '2026-09-25', 490.00, 7, 2);
+INSERT INTO gestao_pedidos.pedido VALUES (6, '2026-09-25', 400.00, 7, 2);
 
 
 --
@@ -270,7 +270,7 @@ INSERT INTO gestao_pedidos.produto_pedido VALUES (4, 10, 18.00, 2, 18);
 INSERT INTO gestao_pedidos.produto_pedido VALUES (5, 100, 11.00, 3, 15);
 INSERT INTO gestao_pedidos.produto_pedido VALUES (6, 60, 18.00, 4, 18);
 INSERT INTO gestao_pedidos.produto_pedido VALUES (9, 10, 22.00, 6, 21);
-INSERT INTO gestao_pedidos.produto_pedido VALUES (10, 15, 18.00, 6, 18);
+INSERT INTO gestao_pedidos.produto_pedido VALUES (10, 10, 18.00, 6, 18);
 
 
 --
@@ -298,7 +298,7 @@ SELECT pg_catalog.setval('gestao_pedidos.endereco_id_seq', 9, true);
 -- Name: pedido_id_seq; Type: SEQUENCE SET; Schema: gestao_pedidos; Owner: -
 --
 
-SELECT pg_catalog.setval('gestao_pedidos.pedido_id_seq', 6, true);
+SELECT pg_catalog.setval('gestao_pedidos.pedido_id_seq', 7, true);
 
 
 --
@@ -312,7 +312,7 @@ SELECT pg_catalog.setval('gestao_pedidos.produto_id_seq', 21, true);
 -- Name: produto_pedido_id_seq; Type: SEQUENCE SET; Schema: gestao_pedidos; Owner: -
 --
 
-SELECT pg_catalog.setval('gestao_pedidos.produto_pedido_id_seq', 10, true);
+SELECT pg_catalog.setval('gestao_pedidos.produto_pedido_id_seq', 14, true);
 
 
 --
@@ -376,6 +376,14 @@ ALTER TABLE ONLY gestao_pedidos.usuario
 
 ALTER TABLE ONLY gestao_pedidos.cliente
     ADD CONSTRAINT uk7v21uy9djyl7hh9464kkjsjg0 UNIQUE (endereco_id);
+
+
+--
+-- Name: produto_pedido uq_pedido_produto; Type: CONSTRAINT; Schema: gestao_pedidos; Owner: -
+--
+
+ALTER TABLE ONLY gestao_pedidos.produto_pedido
+    ADD CONSTRAINT uq_pedido_produto UNIQUE (pedido_id, produto_id);
 
 
 --
