@@ -145,7 +145,7 @@
   (onHide)="fecharModalItem()"
 >
   @if (itemModalAberto()) {
-    <app-item-pedido-form [item]="itemSelecionado()" [produtos]="produtos()" (salvar)="salvarItem($event)" />
+    <app-item-pedido-form [item]="itemSelecionado()" [produtos]="produtosDisponiveis()" (salvar)="salvarItem($event)" />
   }
 
   <ng-template #footer>

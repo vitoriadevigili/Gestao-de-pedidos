@@ -103,6 +103,16 @@ export class PedidoFormComponent {
     return indice !== null ? this.pedidoModel().itens[indice] : null;
   });
 
+  protected produtosDisponiveis = computed(() => {
+    const produtoIdEmEdicao = this.itemSelecionado()?.produtoId ?? null;
+    const produtoIdsNoPedido = new Set(
+      this.pedidoModel()
+        .itens.map((item) => item.produtoId)
+        .filter((produtoId) => produtoId !== produtoIdEmEdicao),
+    );
+    return this.produtos().filter((produto) => !produtoIdsNoPedido.has(produto.id));
+  });
+
   constructor() {
     effect(() => {
       if (this.emEdicao()) {

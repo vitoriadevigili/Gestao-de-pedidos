@@ -81,6 +81,8 @@ public class PedidoService {
         Usuario usuario = usuarioAutenticadoProvider.obterUsuarioAutenticado();
 
         if (request.itens() != null && !request.itens().isEmpty()) {
+            validarItensDuplicados(request.itens());
+
             for (ItemPedidoRequest item : request.itens()) {
                 ProdutoPedido produtoPedido = produtoPedidoRepository.findByPedidoIdAndProdutoId(pedido.getId(), item.produtoId())
                         .orElse(new ProdutoPedido());
@@ -119,10 +121,7 @@ public class PedidoService {
     }
 
     private BigDecimal criarItens(Pedido pedido, List<ItemPedidoRequest> itens, Usuario usuario) {
-        if (existeItemDuplicado(itens)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Não é permitido incluir o mesmo produto mais de uma vez no pedido");
-        }
+        validarItensDuplicados(itens);
 
         BigDecimal valorTotal = BigDecimal.ZERO;
 
@@ -141,6 +140,13 @@ public class PedidoService {
         }
 
         return valorTotal;
+    }
+
+    private void validarItensDuplicados(List<ItemPedidoRequest> itens) {
+        if (existeItemDuplicado(itens)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Existem produtos duplicados no pedido. Não é permitido incluir o mesmo produto mais de uma vez");
+        }
     }
 
     private boolean existeItemDuplicado(List<ItemPedidoRequest> itens) {
