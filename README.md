@@ -49,7 +49,7 @@ O banco deve ser criado a partir do arquivo `dump_gestao_pedidos.sql`. Ele cont�
 
 1. o schema `gestao_pedidos`;
 2. as tabelas, com chaves primárias, chaves estrangeiras e sequências de id;
-3. os dados da apresentação (usuário, clientes e produtos).
+3. os dados da apresentação (usuário, clientes, produtos e pedidos).
 
 Restaure o backup **antes** de iniciar o backend.
 
